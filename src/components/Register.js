@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
 import { register } from "../services/authService";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -11,7 +12,7 @@ const Register = ({ alert }) => {
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState(false);
   const [departments, setDepartments] = useState([]);
-  const [err, setErr] = useState({ email: "" });
+  const [err, setErr] = useState("");
   const [fields, setFields] = useState({
     name: "",
     email: "",
@@ -126,21 +127,30 @@ const Register = ({ alert }) => {
 
       setSaving(true);
       register({ name, email, password, department_id, approver })
-        .then((v) => {
-          setFields({
-            name: "",
-            department: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-          });
-          setErr({ email: "" });
-          setSaving(false);
-          MySwal.fire({
-            icon: "success",
-            title: "Congrat..",
-            text: "Registration successful!",
-          });
+        .then((response) => {
+          if (response.user) {
+            setFields({
+              name: "",
+              department: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
+            });
+            setErr({ email: "" });
+            MySwal.fire({
+              icon: "success",
+              title: "Congrat..",
+              text: "Registration successful!",
+            });
+            setSaving(false);
+          } else {
+            setSaving(false);
+            MySwal.fire({
+              icon: "error",
+              title: "Invalid Credentials",
+              text: "Registration Failed!",
+            });
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -258,7 +268,11 @@ const Register = ({ alert }) => {
                 </div>
                 <div className="mt-3">
                   <Button type="submit" onClick={handleSubmit} loading={saving}>
-                    <span>Sign up</span>
+                    {saving ? (
+                      <Spinner animation="grow" variant="light blue" />
+                    ) : (
+                      <span>Sign up</span>
+                    )}
                   </Button>
                 </div>
                 <div className="text-center mt-4 font-weight-light">

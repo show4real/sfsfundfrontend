@@ -77,6 +77,7 @@ const Staff = () => {
           <div style={{ float: "right", paddingRight: 20, paddingTop: 10 }}>
             <h6 style={{ fontSize: 15 }}>{user.name}</h6>
             <h6 style={{ fontSize: 10 }}>{user.role}</h6>
+            <h6 style={{ fontSize: 10 }}>{user.department_name}</h6>
             <button onClick={logOut} className="btn btn-primary">
               logout
             </button>

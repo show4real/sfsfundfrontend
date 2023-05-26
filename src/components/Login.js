@@ -48,19 +48,24 @@ const Login = () => {
     setLoading(true);
 
     login({ email, password })
-      .then(() => {
-        setLoading(false);
-        window.location.reload();
-        history.push("/");
+      .then((response) => {
+        console.log(response);
+        if (response.user) {
+          setLoading(false);
+          window.location.reload();
+          history.push("/");
+        } else {
+          setLoading(false);
+          MySwal.fire({
+            icon: "error",
+            title: "Invalid Email/Password",
+            text: "Login Failed!",
+          });
+        }
       })
       .catch((error) => {
         setLoading(false);
         setPassword("");
-        MySwal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Unauthorized user!",
-        });
       });
   };
 
